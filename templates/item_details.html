@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>物品详情</title>
+</head>
+
+<body>
+
+<h1>物品详情</h1>
+
+<h2>{{ item.name }}</h2>
+
+<p>描述：{{ item.description }}</p>
+
+<p>分类：
+{{ item.category.name }}
+</p>
+
+<p>状态：
+{{ item.status }}
+</p>
+
+<p>日期：
+{{ item.date }}
+</p>
+
+<p>地点：
+{{ item.location }}
+</p>
+
+
+{% if item.image_file %}
+<img src="{{ url_for('static', filename='images/' + item.image_file) }}" width="300">
+{% endif %}
+
+
+<br><br>
+
+<a href="{{ url_for('home_page') }}">返回首页</a>
+
+</body>
+</html>

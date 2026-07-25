@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>发布失物</title>
+</head>
+<body>
+
+<h2>发布失物</h2>
+
+<form method="POST" enctype="multipart/form-data">
+
+    <p>
+        名称：
+        <input name="name" required>
+    </p>
+
+    <p>
+        描述：
+        <textarea name="description"></textarea>
+    </p>
+
+
+    <p>
+        分类：
+
+        <select name="category_id" required>
+
+            {% for category in categories %}
+
+            <option value="{{ category.id }}">
+                {{ category.name }}
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+    </p>
+
+
+    <p>
+        状态：
+
+        <select name="status">
+            <option value="lost">丢失</option>
+            <option value="found">拾获</option>
+        </select>
+
+    </p>
+
+
+    <p>
+        日期：
+        <input type="date" name="date" required>
+    </p>
+
+
+    <p>
+        地点：
+        <input name="location">
+    </p>
+
+
+    <p>
+        图片：
+        <input type="file" name="image">
+    </p>
+
+
+    <button type="submit">提交</button>
+
+</form>
+
+</body>
+</html>

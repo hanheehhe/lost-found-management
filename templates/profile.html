@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <!-- Profile Picture -->
+                <div class="text-center">
+                    <img src="{{ url_for('static', filename='images/' + (current_user.profile_pic or 'default.jpg')) }}" alt="Profile Picture" class="rounded-circle mb-3" width="150" height="150">
+                </div>
+                <!-- Profile Details -->
+                <div class="text-left">
+                    <h2>Profile</h2>
+                    <p><strong>Email:</strong> {{ current_user.email }}</p>
+                    <p><strong>Name:</strong> {{ current_user.first_name }} {{ current_user.last_name }}</p>
+                    <p><strong>Roll Number:</strong> {{ current_user.roll_number }}</p>
+                    <p><strong>Batch:</strong> {{ current_user.batch }}</p>
+                    <p><strong>Course:</strong> {{ current_user.course.name }}</p>
+                    <p><strong>Branch:</strong> {{ current_user.branch.name }}</p>
+                </div>
+            </div>
+            <!-- Edit Profile Button -->
+            <div class="text-center mb-4">
+                <a href="{{ url_for('update_profile') }}" class="btn btn-primary">Edit Profile</a>
+            </div>
+            <!-- User Items -->
+            <h3>Your Items</h3>
+            <ul class="list-unstyled">
+                {% for item in current_user.items %}
+                <li class="mb-2">
+                    <a href="{{ url_for('item_detail', item_id=item.id) }}" class="text-decoration-none">{{ item.name }}</a>
+                    {% if item.is_claimed %}
+                    <span class="badge badge-success ml-2">Claimed</span>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
