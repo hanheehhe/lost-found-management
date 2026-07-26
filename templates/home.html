@@ -3,7 +3,7 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<h2 class="mt-4">Lost & Found Items</h2>
+<h2 class="mt-4">失物招领信息</h2>
 
 <form method="GET" action="{{ url_for('home_page') }}" class="form-inline mb-4">
     <input type="text" class="form-control mr-2" name="search" placeholder="Search by name or description" value="{{ request.args.get('search', '') }}">
