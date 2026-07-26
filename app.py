@@ -288,8 +288,12 @@ def admin():
         'admin.html',
         users=users,
         items=items,
-        categories=categories
+        categories=categories,
+        user_count=len(users),
+        item_count=len(items),
+        category_count=len(categories)
     )
+
 
 @app.route('/admin/delete_item/<int:item_id>', methods=['POST'])
 @login_required
@@ -299,16 +303,65 @@ def admin_delete_item(item_id):
         flash('没有权限','danger')
         return redirect(url_for('home_page'))
 
+
     item = Item.query.get_or_404(item_id)
 
+
     db.session.delete(item)
+
     db.session.commit()
+
 
     flash('删除成功','success')
 
     return redirect(url_for('admin'))
 
 
+@app.route('/admin/toggle_admin/<int:user_id>', methods=['POST'])
+@login_required
+def toggle_admin(user_id):
+    if not current_user.is_admin:
+        flash('没有权限', 'danger')
+        return redirect(url_for('home_page'))
+
+    user = User.query.get_or_404(user_id)
+    items = Item.query.filter_by(user_id=user.id).all()
+
+    for item in items:
+        db.session.delete(item)
+    if user.id == current_user.id:
+        flash('不能修改自己的管理员权限', 'danger')
+        return redirect(url_for('admin'))
+
+    user.is_admin = not user.is_admin
+
+    db.session.commit()
+
+    flash('管理员权限已修改', 'success')
+
+    return redirect(url_for('admin'))
+
+
+@app.route('/admin/delete_user/<int:user_id>', methods=['POST'])
+@login_required
+def admin_delete_user(user_id):
+
+    if not current_user.is_admin:
+        flash('没有权限','danger')
+        return redirect(url_for('home_page'))
+
+    user = User.query.get_or_404(user_id)
+
+    if user.id == current_user.id:
+        flash('不能删除自己','danger')
+        return redirect(url_for('admin'))
+
+    db.session.delete(user)
+    db.session.commit()
+
+    flash('用户删除成功','success')
+
+    return redirect(url_for('admin'))
 
 @app.route('/')
 def home_page():

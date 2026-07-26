@@ -5,6 +5,7 @@ from flask_bcrypt import Bcrypt
 from itsdangerous import URLSafeTimedSerializer as Serializer, SignatureExpired
 from flask import current_app
 from flask_login import UserMixin
+import enum
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
@@ -15,23 +16,10 @@ class ItemStatusEnum(Enum):
     LOST = 'lost'
     FOUND = 'found'
 
-class CourseEnum(Enum):
-    BTECH = 'Btech'
-    BARCH = 'Barch'
-    MTECH = 'Mtech'
-    MSC = 'Msc'
-    PHD = 'PHD'
+import enum
 
-class BranchEnum(Enum):
-    CSE = 'CSE'
-    ECE = 'ECE'
-    EEE = 'EEE'
-    ICE = 'ICE'
-    CHEM = 'Chem'
-    CIVIL = 'Civil'
-    MECH = 'MECH'
-    PROD = 'Prod'
-    OTHER = 'Other'
+
+
 
 
 class User(db.Model, UserMixin):
@@ -48,8 +36,8 @@ class User(db.Model, UserMixin):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     roll_number = db.Column(db.String(20), nullable=False)
     batch = db.Column(db.Integer, nullable=False)
-    course = db.Column(db.Enum(CourseEnum), nullable=False)
-    branch = db.Column(db.Enum(BranchEnum), nullable=False)
+    course = db.Column(db.String(50), nullable=False)
+    branch = db.Column(db.String(50), nullable=False)
 
     items = db.relationship('Item', backref='owner', lazy=True)
     password_reset_tokens = db.relationship('PasswordResetToken', backref='user', lazy=True)
