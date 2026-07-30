@@ -325,20 +325,16 @@ def toggle_admin(user_id):
         return redirect(url_for('home_page'))
 
     user = User.query.get_or_404(user_id)
-    items = Item.query.filter_by(user_id=user.id).all()
 
-    for item in items:
-        db.session.delete(item)
+    # 不允许修改自己的管理员权限
     if user.id == current_user.id:
         flash('不能修改自己的管理员权限', 'danger')
         return redirect(url_for('admin'))
 
     user.is_admin = not user.is_admin
-
     db.session.commit()
 
     flash('管理员权限已修改', 'success')
-
     return redirect(url_for('admin'))
 
 
@@ -446,17 +442,23 @@ def add_item():
 def edit_item(item_id):
     item = Item.query.get_or_404(item_id)
 
-    if request.method == 'POST':
-        item.name = request.form['name']
-        item.description = request.form['description']
-        item.category_id = request.form['category']
-        item.status = request.form['status']
-        item.date = request.form['date']
-        image_file = request.files['image_file']
+    # 所有权校验：仅允许所有者编辑
+    if item.user_id != current_user.id:
+        flash('You do not have permission to edit this item.', 'danger')
+        return redirect(url_for('home_page'))
 
-        if image_file:
+    if request.method == 'POST':
+        item.name = request.form.get('name', item.name)
+        item.description = request.form.get('description', item.description)
+        item.category_id = request.form.get('category', item.category_id)
+        item.status = request.form.get('status', item.status)
+        item.date = request.form.get('date', item.date)
+        item.location = request.form.get('location', item.location)
+        image_file = request.files.get('image') or request.files.get('image_file')
+
+        if image_file and image_file.filename:
             image_filename = secure_filename(image_file.filename)
-            image_file.save(f'static/images/{image_filename}')
+            image_file.save(os.path.join(app.config['UPLOAD_FOLDER'], image_filename))
             item.image_file = image_filename
 
         db.session.commit()
@@ -471,6 +473,12 @@ def edit_item(item_id):
 @login_required
 def delete_item(item_id):
     item = Item.query.get_or_404(item_id)
+
+    # 所有权校验：仅允许所有者删除
+    if item.user_id != current_user.id:
+        flash('You do not have permission to delete this item.', 'danger')
+        return redirect(url_for('home_page'))
+
     db.session.delete(item)
     db.session.commit()
     flash('Item deleted successfully.', 'success')

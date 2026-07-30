@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Notifications - Lost & Found{% endblock %}
+{% block content %}
+<div class="mt-4">
+    <h2>Notifications</h2>
+    {% if notifications %}
+        <div class="list-group">
+            {% for notification in notifications %}
+                <div class="list-group-item">
+                    <p class="mb-1">{{ notification.message }}</p>
+                    <small class="text-muted">{{ notification.sent_at.strftime('%Y-%m-%d %H:%M') if notification.sent_at else '' }}</small>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">暂无通知</div>
+    {% endif %}
+</div>
+{% endblock %}
