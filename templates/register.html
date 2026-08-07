@@ -1,100 +1,184 @@
 {% extends "base.html" %}
 
-{% block title %}Register{% endblock %}
+{% block title %}注册{% endblock %}
 
 {% block content %}
-<h2 class="mt-4">Sign Up</h2>
+
+<h2 class="mt-4">注册</h2>
+
 <form method="POST" action="{{ url_for('register') }}" onsubmit="return validateForm()">
+
+
     <div class="form-group">
-        <label for="email">Email address</label>
+
+        <label for="email">邮箱地址</label>
+
         <input type="email" class="form-control" id="email" name="email" required>
-        <small id="emailHelp" class="form-text text-muted">Please use your college email ending in .edu</small>
+
+        <small id="emailHelp" class="form-text text-muted">
+            请使用以 .edu 结尾的学校邮箱
+        </small>
+
     </div>
+
+
     <div class="form-group">
-        <label for="first_name">First Name</label>
+
+        <label for="first_name">名</label>
+
         <input type="text" class="form-control" id="first_name" name="first_name" required>
+
     </div>
+
+
     <div class="form-group">
-        <label for="last_name">Last Name</label>
+
+        <label for="last_name">姓</label>
+
         <input type="text" class="form-control" id="last_name" name="last_name" required>
+
     </div>
+
+
     <div class="form-group">
-        <label for="roll_number">Roll Number</label>
+
+        <label for="roll_number">学号</label>
+
         <input type="text" class="form-control" id="roll_number" name="roll_number" required>
+
     </div>
-    <div class="form-group">
-        <label for="batch">Batch</label>
-        <input type="number" class="form-control" id="batch" name="batch" min="2020" max="2030" required>
-    </div>
-   <div class="form-group">
-    <label for="course">Course</label>
 
-    <select class="form-control" id="course" name="course" required>
 
-        <option value="BTECH">Btech</option>
-
-        <option value="MTECH">Mtech</option>
-
-        <option value="PHD">PHD</option>
-
-    </select>
-
-</div>
     <div class="form-group">
 
-<label for="branch">Branch</label>
+        <label for="batch">入学年份</label>
 
-<select class="form-control" id="branch" name="branch" required>
+        <input type="number"
+               class="form-control"
+               id="batch"
+               name="batch"
+               min="2020"
+               max="2030"
+               required>
 
-<option value="CSE">CSE</option>
-
-<option value="ECE">ECE</option>
-
-<option value="EEE">EEE</option>
-
-<option value="ICE">ICE</option>
-
-<option value="CHEM">Chem</option>
-
-<option value="CIVIL">Civil</option>
-
-<option value="MECH">MECH</option>
-
-<option value="PROD">Prod</option>
-
-<option value="OTHER">Other</option>
-
-</select>
-
-</div>
-    <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" class="form-control" id="password" name="password" required>
-        <small id="passwordHelp" class="form-text text-muted">Password must be at least 8 characters long and contain both letters and numbers.</small>
     </div>
-    <button type="submit" class="btn btn-primary">Register</button>
+
+
+    <div class="form-group">
+
+        <label for="course">学历</label>
+
+        <select class="form-control" id="course" name="course" required>
+
+            <option value="BTECH">本科</option>
+
+            <option value="MTECH">硕士</option>
+
+            <option value="PHD">博士</option>
+
+        </select>
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label for="branch">专业方向</label>
+
+        <select class="form-control" id="branch" name="branch" required>
+
+            <option value="CSE">计算机科学与技术</option>
+
+            <option value="ECE">电子与通信工程</option>
+
+            <option value="EEE">电气工程</option>
+
+            <option value="ICE">仪器与控制工程</option>
+
+            <option value="CHEM">化学工程</option>
+
+            <option value="CIVIL">土木工程</option>
+
+            <option value="MECH">机械工程</option>
+
+            <option value="PROD">生产工程</option>
+
+            <option value="OTHER">其他</option>
+
+        </select>
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label for="password">密码</label>
+
+        <input type="password"
+               class="form-control"
+               id="password"
+               name="password"
+               required>
+
+
+        <small id="passwordHelp" class="form-text text-muted">
+
+            密码长度至少为8位，并且必须同时包含字母和数字。
+
+        </small>
+
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">
+        注册
+    </button>
+
+
 </form>
 
+
+
 <script>
+
     function validateForm() {
+
         const email = document.getElementById("email").value;
+
         const password = document.getElementById("password").value;
 
-        // Check if email ends with .edu
+
+        // 检查邮箱是否为 .edu 结尾
+
         const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.edu$/;
+
         if (!emailPattern.test(email)) {
-            alert("Please enter a valid college email address ending in .edu");
+
+            alert("请输入有效的学校邮箱（必须以 .edu 结尾）");
+
             return false;
+
         }
 
-        // Check if password is at least 8 characters long and contains both letters and numbers
+
+        // 检查密码长度和组成
+
         const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
         if (!passwordPattern.test(password)) {
-            alert("Password must be at least 8 characters long and contain both letters and numbers.");
+
+            alert("密码长度至少为8位，并且必须同时包含字母和数字。");
+
             return false;
+
         }
+
 
         return true;
+
     }
+
 </script>
+
+
 {% endblock %}

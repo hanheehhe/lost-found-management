@@ -1,43 +1,107 @@
-<!DOCTYPE html>
-<html lang="zh">
-<head>
-    <meta charset="UTF-8">
-    <title>物品详情</title>
-</head>
+{% extends "base.html" %}
 
-<body>
-
-<h1>物品详情</h1>
-
-<h2>{{ item.name }}</h2>
-
-<p>描述：{{ item.description }}</p>
-
-<p>分类：
-{{ item.category.name }}
-</p>
-
-<p>状态：
-{{ item.status }}
-</p>
-
-<p>日期：
-{{ item.date }}
-</p>
-
-<p>地点：
-{{ item.location }}
-</p>
+{% block title %}物品详情{% endblock %}
 
 
-{% if item.image_file %}
-<img src="{{ url_for('static', filename='images/' + item.image_file) }}" width="300">
-{% endif %}
+{% block content %}
+
+<div class="mt-4">
+
+    <h1>物品详情</h1>
 
 
-<br><br>
+    <div class="card mt-4">
 
-<a href="{{ url_for('home_page') }}">返回首页</a>
+        {% if item.image_file %}
 
-</body>
-</html>
+        <img src="{{ url_for('static', filename='images/' + item.image_file) }}"
+             class="card-img-top"
+             style="max-height:400px; object-fit:contain;">
+
+        {% endif %}
+
+
+        <div class="card-body">
+
+
+            <h2 class="card-title">
+                {{ item.name }}
+            </h2>
+
+
+            <hr>
+
+
+            <p class="card-text">
+
+                <strong>描述：</strong>
+
+                {{ item.description }}
+
+            </p>
+
+
+
+            <p>
+
+                <strong>分类：</strong>
+
+                {{ item.category.name }}
+
+            </p>
+
+
+
+            <p>
+
+                <strong>状态：</strong>
+
+                {% if item.status == 'lost' %}
+                    丢失
+                {% elif item.status == 'found' %}
+                    拾获
+                {% else %}
+                    {{ item.status }}
+                {% endif %}
+
+            </p>
+
+
+
+            <p>
+
+                <strong>日期：</strong>
+
+                {{ item.date }}
+
+            </p>
+
+
+
+            <p>
+
+                <strong>地点：</strong>
+
+                {{ item.location }}
+
+            </p>
+
+
+
+            <a href="{{ url_for('home_page') }}"
+               class="btn btn-primary">
+
+                返回首页
+
+            </a>
+
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+{% endblock %}
