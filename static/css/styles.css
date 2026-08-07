@@ -1,118 +1,838 @@
+/* =====================
+   全局
+===================== */
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
+
+    font-family:
+    "Microsoft YaHei",
+    Arial,
+    sans-serif;
+
+    background-color: #f5f7fb;
+
+    margin:0;
+
+    padding:0;
+
 }
 
-nav {
-    background-color: #333;
+
+/* =====================
+   导航栏
+===================== */
+
+.main-navbar {
+
+    background:
+    linear-gradient(
+        90deg,
+        #2563eb,
+        #1e40af
+    );
+
 }
 
-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 60px;
+
+.navbar-brand {
+
+    font-size:22px;
+
+    letter-spacing:1px;
+
+    color:white !important;
+
 }
 
-nav ul li {
-    margin: 0 15px;
+
+.nav-link {
+
+    font-size:16px;
+
+    margin-right:15px;
+
+    color:white !important;
+
 }
 
-nav ul li a {
-    color: white;
-    text-decoration: none;
-    font-size: 16px;
-    padding: 10px 15px;
-    display: block;
+
+.nav-link:hover {
+
+    opacity:0.8;
+
 }
 
-nav ul li a:hover,
-nav ul li a:focus {
-    background-color: #575757;
-    border-radius: 5px;
+
+
+/* =====================
+   页面容器
+===================== */
+
+.page-container {
+
+    padding-top:25px;
+
+    padding-bottom:30px;
+
 }
 
-.container {
-    max-width: 600px;
-    margin: 50px auto;
-    padding: 20px;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+
+
+/* =====================
+   标题
+===================== */
+
+
+h1,h2,h3 {
+
+    color:#1f2937;
+
+    font-weight:700;
+
 }
 
-h2 {
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 24px;
-    color: #333;
+
+
+/* =====================
+   卡片
+===================== */
+
+
+.card {
+
+    border:none;
+
+    border-radius:15px;
+
+    overflow:hidden;
+
+    background:white;
+
+    box-shadow:
+    0 5px 15px rgba(0,0,0,0.08);
+
+    transition:0.3s;
+
 }
+
+
+
+.card:hover {
+
+
+    transform:translateY(-5px);
+
+
+    box-shadow:
+    0 10px 25px rgba(0,0,0,0.12);
+
+
+}
+
+
+
+
+.card-img-top {
+
+
+    height:220px;
+
+    object-fit:cover;
+
+
+}
+
+
+
+
+
+/* =====================
+   按钮
+===================== */
+
+
+.btn {
+
+
+    border-radius:10px;
+
+    padding-left:20px;
+
+    padding-right:20px;
+
+
+}
+
+
+
+.btn-primary {
+
+
+    background-color:#2563eb;
+
+    border-color:#2563eb;
+
+
+}
+
+
+
+.btn-primary:hover {
+
+
+    background-color:#1d4ed8;
+
+}
+
+
+
+
+/* =====================
+   表单
+===================== */
+
+
+.form-control {
+
+
+    border-radius:10px;
+
+    padding:10px;
+
+
+}
+
+
+
+.form-control:focus {
+
+
+    border-color:#2563eb;
+
+
+    box-shadow:
+    0 0 0 0.2rem rgba(37,99,blue,.2);
+
+
+}
+
+
+
 
 label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
+
+
+    font-weight:600;
+
 }
 
-input[type="text"],
-input[type="email"],
-input[type="password"] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-sizing: border-box;
-    transition: border-color 0.3s ease;
+
+
+
+
+/* =====================
+   图片
+===================== */
+
+
+img {
+
+
+    max-width:100%;
+
+
 }
 
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus {
-    border-color: #5cb85c;
-    outline: none;
+
+
+/* =====================
+   头像
+===================== */
+
+
+.rounded-circle {
+
+
+    object-fit:cover;
+
+
 }
 
-button {
-    width: 100%;
-    padding: 15px;
-    background-color: #5cb85c;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+
+
+/* =====================
+   表格
+===================== */
+
+
+.table {
+
+
+    background:white;
+
+    border-radius:10px;
+
+    overflow:hidden;
+
+
 }
 
-button:hover,
-button:focus {
-    background-color: #4cae4c;
-    transform: translateY(-1px);
+
+
+.table th {
+
+
+    background:#2563eb;
+
+    color:white;
+
+
 }
 
-button:active {
-    background-color: #449d44;
-    transform: translateY(0);
+
+
+.table td,
+.table th {
+
+
+    padding:12px !important;
+
+
 }
 
-.error {
-    color: #d9534f;
-    font-size: 0.9em;
-    margin-top: -10px;
-    margin-bottom: 15px;
-    display: block;
+
+
+
+/* =====================
+   提示信息
+===================== */
+
+
+.alert {
+
+
+    border-radius:10px;
+
+
 }
 
-.container {
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background: #fff;
-    margin: 30px auto;
+
+
+
+/* =====================
+   页脚
+===================== */
+
+
+footer {
+
+
+    background:white;
+
+    margin-top:50px;
+
+    padding:20px;
+
+
+}
+
+
+
+
+/* =====================
+   首页搜索
+===================== */
+
+
+.search-box {
+
+
+    display:flex;
+
+    gap:10px;
+
+
+}
+
+
+
+.search-box input {
+
+
+    flex:2;
+
+
+}
+
+
+
+.search-box select {
+
+
+    flex:1;
+
+
+}
+
+
+
+
+
+/* =====================
+   首页卡片
+===================== */
+
+
+.item-card {
+
+
+    height:100%;
+
+
+}
+
+
+
+
+.item-card .card-title {
+
+
+    font-size:20px;
+
+
+}
+
+
+
+
+
+/* =====================
+   标签
+===================== */
+
+
+.badge {
+
+
+    padding:8px 12px;
+
+    border-radius:20px;
+
+    margin-right:5px;
+
+    font-size:14px;
+
+
+}
+
+
+
+
+
+/* =====================
+   首页标题
+===================== */
+
+
+.home-header {
+
+
+    margin-bottom:20px;
+
+
+}
+
+
+
+
+
+/* =====================
+   发布页面
+===================== */
+
+
+.form-page {
+
+
+    max-width:700px;
+
+    margin:auto;
+
+
+}
+
+
+
+.item-form {
+
+
+    background:white;
+
+    padding:30px;
+
+    border-radius:15px;
+
+
+    box-shadow:
+    0 5px 20px rgba(0,0,0,0.08);
+
+
+}
+
+
+
+.item-form label {
+
+
+    margin-bottom:8px;
+
+
+}
+
+
+
+.item-form textarea {
+
+
+    resize:none;
+
+
+}
+
+
+
+.form-page .btn {
+
+
+    width:150px;
+
+
+}
+
+
+
+
+
+/* =====================
+   详情页面
+===================== */
+
+
+.detail-page {
+
+
+    max-width:800px;
+
+    margin:auto;
+
+
+}
+
+
+
+
+.detail-card {
+
+
+    border-radius:15px;
+
+
+    overflow:hidden;
+
+
+}
+
+
+
+.detail-image-box {
+
+
+    background:#f8f9fa;
+
+
+    text-align:center;
+
+
+    padding:20px;
+
+
+}
+
+
+
+.detail-image {
+
+
+    max-height:400px;
+
+
+    max-width:100%;
+
+
+    object-fit:contain;
+
+
+}
+
+
+
+.detail-info p {
+
+
+    font-size:16px;
+
+
+    line-height:1.8;
+
+
+}
+
+
+
+.detail-info strong {
+
+
+    color:#374151;
+
+
+}
+
+
+
+
+
+/* =====================
+   个人中心
+===================== */
+
+
+.profile-page {
+
+
+    max-width:700px;
+
+    margin:auto;
+
+
+}
+
+
+
+.profile-card {
+
+
+    border-radius:15px;
+
+
+}
+
+
+
+
+.profile-avatar {
+
+
+    width:150px;
+
+
+    height:150px;
+
+
+    border-radius:50%;
+
+
+    object-fit:cover;
+
+
+}
+
+
+
+
+.profile-info {
+
+
+    font-size:16px;
+
+
+    line-height:2;
+
+
+}
+
+
+
+.list-group-item {
+
+
+    border-radius:10px!important;
+
+
+    margin-bottom:10px;
+
+
+}
+
+
+
+
+/* =====================
+   编辑资料
+===================== */
+
+
+.edit-profile-page {
+
+
+    max-width:700px;
+
+    margin:auto;
+
+
+}
+
+
+
+
+.edit-profile-card {
+
+
+    border-radius:15px;
+
+
+}
+
+
+
+
+.edit-profile-card .form-control {
+
+
+    height:45px;
+
+
+}
+
+
+
+.edit-avatar {
+
+
+    width:120px;
+
+    height:120px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    border:3px solid #eee;
+
+
+}
+
+
+
+.edit-profile-card .btn {
+
+
+    width:180px;
+
+
+}
+
+
+
+
+/* =====================
+   登录注册
+===================== */
+
+
+.auth-page {
+
+
+    max-width:450px;
+
+    margin:auto;
+
+
+}
+
+
+
+
+.auth-card {
+
+
+    border-radius:15px;
+
+    border:none;
+
+
+    box-shadow:
+    0 8px 25px rgba(0,0,0,0.1);
+
+
+}
+
+
+
+
+.auth-card .form-control {
+
+
+    height:45px;
+
+
+}
+
+
+
+
+.auth-card .btn {
+
+
+    height:45px;
+
+    font-size:16px;
+
+
+}
+
+
+
+
+/* =====================
+   注册页面
+===================== */
+
+
+.register-page {
+
+
+    max-width:650px;
+
+
+}
+
+
+
+.register-page .auth-card {
+
+
+    border-radius:15px;
+
+
+}
+
+
+
+.register-page .form-group {
+
+
+    margin-bottom:20px;
+
+
 }

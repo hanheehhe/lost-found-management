@@ -1,11 +1,36 @@
 {% extends "base.html" %}
 
-{% block title %}编辑个人资料{% endblock %}
+
+{% block title %}
+编辑个人资料
+{% endblock %}
+
 
 
 {% block content %}
 
-<h2 class="mt-4">编辑个人资料</h2>
+
+
+<div class="edit-profile-page mt-4">
+
+
+
+<div class="card edit-profile-card">
+
+
+
+<div class="card-body">
+
+
+
+<h2 class="mb-4 text-center">
+
+编辑个人资料
+
+</h2>
+
+
+
 
 
 <form method="POST"
@@ -13,237 +38,325 @@
       enctype="multipart/form-data">
 
 
-    <div class="form-group">
 
-        <label for="first_name">名</label>
 
-        <input type="text"
-               class="form-control"
-               id="first_name"
-               name="first_name"
-               value="{{ current_user.first_name }}"
-               required>
 
-    </div>
+<div class="form-group">
 
 
+<label>
+姓名
+</label>
 
-    <div class="form-group">
 
-        <label for="last_name">姓</label>
+<input type="text"
+       class="form-control"
+       name="first_name"
+       value="{{ current_user.first_name }}"
+       required>
 
-        <input type="text"
-               class="form-control"
-               id="last_name"
-               name="last_name"
-               value="{{ current_user.last_name }}"
-               required>
 
-    </div>
+</div>
 
 
 
-    <div class="form-group">
 
-        <label for="roll_number">学号</label>
 
-        <input type="text"
-               class="form-control"
-               id="roll_number"
-               name="roll_number"
-               value="{{ current_user.roll_number }}"
-               required>
 
-    </div>
+<div class="form-group">
 
 
+<label>
+姓氏
+</label>
 
-    <div class="form-group">
 
-        <label for="batch">入学年份</label>
+<input type="text"
+       class="form-control"
+       name="last_name"
+       value="{{ current_user.last_name }}"
+       required>
 
-        <select class="form-control"
-                id="batch"
-                name="batch"
-                required>
 
+</div>
 
-            {% for year in range(2020, 2031) %}
 
-            <option value="{{ year }}"
-                {% if current_user.batch == year %}selected{% endif %}>
-                {{ year }}
-            </option>
 
-            {% endfor %}
 
 
-        </select>
 
-    </div>
 
+<div class="form-group">
 
 
+<label>
+学号
+</label>
 
-    <div class="form-group">
 
-        <label for="course">学历</label>
+<input type="text"
+       class="form-control"
+       name="roll_number"
+       value="{{ current_user.roll_number }}"
+       required>
 
 
-        <select class="form-control"
-                id="course"
-                name="course"
-                required>
+</div>
 
 
-            <option value="Btech"
-                {% if current_user.course == 'Btech' %}selected{% endif %}>
-                本科
-            </option>
 
 
-            <option value="Barch"
-                {% if current_user.course == 'Barch' %}selected{% endif %}>
-                建筑学本科
-            </option>
 
 
-            <option value="Mtech"
-                {% if current_user.course == 'Mtech' %}selected{% endif %}>
-                硕士
-            </option>
 
 
-            <option value="Msc"
-                {% if current_user.course == 'Msc' %}selected{% endif %}>
-                理学硕士
-            </option>
+<div class="form-group">
 
 
-            <option value="PHD"
-                {% if current_user.course == 'PHD' %}selected{% endif %}>
-                博士
-            </option>
+<label>
+入学年份
+</label>
 
 
-        </select>
+<select class="form-control"
+        name="batch"
+        required>
 
-    </div>
 
 
+{% for year in range(2020,2031) %}
 
 
-    <div class="form-group">
+<option value="{{ year }}"
+{% if current_user.batch == year %}selected{% endif %}>
 
-        <label for="branch">专业方向</label>
 
+{{ year }}
 
-        <select class="form-control"
-                id="branch"
-                name="branch"
-                required>
 
+</option>
 
-            <option value="CSE"
-                {% if current_user.branch == 'CSE' %}selected{% endif %}>
-                计算机科学与技术
-            </option>
 
+{% endfor %}
 
-            <option value="ECE"
-                {% if current_user.branch == 'ECE' %}selected{% endif %}>
-                电子与通信工程
-            </option>
 
 
-            <option value="EEE"
-                {% if current_user.branch == 'EEE' %}selected{% endif %}>
-                电气工程
-            </option>
+</select>
 
 
-            <option value="ICE"
-                {% if current_user.branch == 'ICE' %}selected{% endif %}>
-                仪器与控制工程
-            </option>
+</div>
 
 
-            <option value="Chem"
-                {% if current_user.branch == 'Chem' %}selected{% endif %}>
-                化学工程
-            </option>
 
 
-            <option value="Civil"
-                {% if current_user.branch == 'Civil' %}selected{% endif %}>
-                土木工程
-            </option>
 
 
-            <option value="MECH"
-                {% if current_user.branch == 'MECH' %}selected{% endif %}>
-                机械工程
-            </option>
 
 
-            <option value="Prod"
-                {% if current_user.branch == 'Prod' %}selected{% endif %}>
-                生产工程
-            </option>
 
+<div class="form-group">
 
-            <option value="Other"
-                {% if current_user.branch == 'Other' %}selected{% endif %}>
-                其他
-            </option>
 
+<label>
+学历
+</label>
 
-        </select>
 
-    </div>
+<select class="form-control"
+        name="course"
+        required>
 
 
+<option value="Btech">
+本科
+</option>
 
 
-    <div class="form-group">
+<option value="Barch">
+建筑学本科
+</option>
 
 
-        <label for="profile_pic">
-            头像
-        </label>
+<option value="Mtech">
+硕士
+</option>
 
 
-        <input type="file"
-               class="form-control-file"
-               id="profile_pic"
-               name="profile_pic">
+<option value="Msc">
+理学硕士
+</option>
 
 
+<option value="PHD">
+博士
+</option>
 
-        {% if current_user.profile_pic %}
 
 
-        <img src="{{ url_for('static', filename='images/' + current_user.profile_pic) }}"
-             alt="头像"
-             class="img-fluid mt-2"
-             width="150"
-             height="150">
+</select>
 
 
-        {% endif %}
 
+</div>
 
-    </div>
 
 
 
 
-    <button type="submit" class="btn btn-primary">
-        保存修改
-    </button>
+
+
+
+
+<div class="form-group">
+
+
+<label>
+专业方向
+</label>
+
+
+
+<select class="form-control"
+        name="branch"
+        required>
+
+
+
+<option value="CSE">
+计算机科学与技术
+</option>
+
+
+<option value="ECE">
+电子与通信工程
+</option>
+
+
+<option value="EEE">
+电气工程
+</option>
+
+
+<option value="ICE">
+仪器与控制工程
+</option>
+
+
+<option value="Chem">
+化学工程
+</option>
+
+
+<option value="Civil">
+土木工程
+</option>
+
+
+<option value="MECH">
+机械工程
+</option>
+
+
+<option value="Prod">
+生产工程
+</option>
+
+
+<option value="Other">
+其他
+</option>
+
+
+
+</select>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+更换头像
+</label>
+
+
+
+<input type="file"
+       class="form-control-file"
+       name="profile_pic">
+
+
+
+
+
+{% if current_user.profile_pic %}
+
+
+<div class="mt-3 text-center">
+
+
+<img src="{{ url_for('static',
+filename='images/' + current_user.profile_pic) }}"
+class="edit-avatar">
+
+
+</div>
+
+
+{% endif %}
+
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="text-center">
+
+
+<button type="submit"
+        class="btn btn-primary">
+
+
+保存修改
+
+
+</button>
+
+
+</div>
+
+
+
 
 
 </form>
+
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
 
 
 {% endblock %}

@@ -1,50 +1,59 @@
 {% extends "base.html" %}
 
-{% block title %}管理员后台{% endblock %}
+
+{% block title %}
+管理员后台
+{% endblock %}
+
+
 
 
 {% block content %}
 
 
-<h1 class="mt-4">管理员后台</h1>
 
-
-<div class="dashboard d-flex gap-3 mb-4">
-
-
-    <div class="card p-3 text-center">
-
-        <h3>用户数量</h3>
-
-        <p class="h2">
-            {{ user_count }}
-        </p>
-
-    </div>
+<div class="mt-4">
 
 
 
-    <div class="card p-3 text-center">
-
-        <h3>物品数量</h3>
-
-        <p class="h2">
-            {{ item_count }}
-        </p>
-
-    </div>
+<h1 class="mb-4">
+    管理员后台
+</h1>
 
 
 
-    <div class="card p-3 text-center">
+<div class="row mb-4">
 
-        <h3>分类数量</h3>
 
-        <p class="h2">
-            {{ category_count }}
-        </p>
 
-    </div>
+<div class="col-md-4 mb-3">
+
+
+<div class="card shadow-sm text-center">
+
+
+<div class="card-body">
+
+
+<h5 class="card-title">
+
+用户数量
+
+</h5>
+
+
+
+<p class="display-4">
+
+{{ user_count }}
+
+</p>
+
+
+</div>
+
+
+</div>
 
 
 </div>
@@ -52,10 +61,106 @@
 
 
 
-<h2>用户列表</h2>
 
 
-<table class="table table-bordered">
+
+<div class="col-md-4 mb-3">
+
+
+<div class="card shadow-sm text-center">
+
+
+<div class="card-body">
+
+
+<h5 class="card-title">
+
+物品数量
+
+</h5>
+
+
+
+<p class="display-4">
+
+{{ item_count }}
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="col-md-4 mb-3">
+
+
+<div class="card shadow-sm text-center">
+
+
+<div class="card-body">
+
+
+<h5 class="card-title">
+
+分类数量
+
+</h5>
+
+
+
+<p class="display-4">
+
+{{ category_count }}
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+<h2 class="mt-5 mb-3">
+
+用户管理
+
+</h2>
+
+
+
+<div class="table-responsive">
+
+
+<table class="table table-bordered table-hover">
+
+
+<thead class="thead-light">
 
 
 <tr>
@@ -73,6 +178,13 @@
 </tr>
 
 
+</thead>
+
+
+
+
+<tbody>
+
 
 {% for user in users %}
 
@@ -85,9 +197,11 @@
 </td>
 
 
+
 <td>
 {{ user.email }}
 </td>
+
 
 
 <td>
@@ -96,21 +210,35 @@
 
 
 
+
+
 <td>
+
 
 {% if user.is_admin %}
 
+
 <span class="badge badge-success">
-是
+
+管理员
+
 </span>
+
+
 
 {% else %}
 
+
+
 <span class="badge badge-secondary">
-否
+
+普通用户
+
 </span>
 
+
 {% endif %}
+
 
 
 </td>
@@ -118,17 +246,17 @@
 
 
 
-<td>
 
+
+<td>
 
 
 <form action="{{ url_for('toggle_admin', user_id=user.id) }}"
       method="POST"
-      style="display:inline;">
+      class="d-inline">
 
 
-<button type="submit"
-        class="btn btn-warning btn-sm">
+<button class="btn btn-warning btn-sm">
 
 
 {% if user.is_admin %}
@@ -142,6 +270,7 @@
 {% endif %}
 
 
+
 </button>
 
 
@@ -150,18 +279,22 @@
 
 
 
+
+
 <form action="{{ url_for('admin_delete_user', user_id=user.id) }}"
       method="POST"
-      style="display:inline;">
+      class="d-inline">
 
 
-<button type="submit"
-        class="btn btn-danger btn-sm"
-        onclick="return confirm('确定删除这个用户吗？')">
+<button class="btn btn-danger btn-sm"
+onclick="return confirm('确定删除该用户吗？')">
 
-删除用户
+
+删除
+
 
 </button>
+
 
 
 </form>
@@ -171,27 +304,53 @@
 </td>
 
 
+
 </tr>
+
 
 
 {% endfor %}
 
 
+
+</tbody>
+
+
 </table>
 
 
+</div>
 
 
 
-<h2>物品列表</h2>
 
 
 
-<table class="table table-bordered">
 
+
+
+<h2 class="mt-5 mb-3">
+
+物品管理
+
+</h2>
+
+
+
+
+
+
+<div class="table-responsive">
+
+
+<table class="table table-bordered table-hover">
+
+
+<thead class="thead-light">
 
 
 <tr>
+
 
 <th>ID</th>
 
@@ -201,8 +360,18 @@
 
 <th>操作</th>
 
+
 </tr>
 
+
+
+</thead>
+
+
+
+
+
+<tbody>
 
 
 {% for item in items %}
@@ -212,31 +381,55 @@
 
 
 <td>
+
 {{ item.id }}
+
 </td>
 
 
+
 <td>
+
 {{ item.name }}
+
 </td>
 
 
 
+
 <td>
+
 
 {% if item.status == 'lost' %}
 
+
+<span class="badge badge-danger">
+
 丢失
+
+</span>
+
+
 
 {% elif item.status == 'found' %}
 
+
+
+<span class="badge badge-success">
+
 拾获
+
+</span>
+
+
 
 {% else %}
 
 {{ item.status }}
 
+
 {% endif %}
+
 
 
 </td>
@@ -244,36 +437,57 @@
 
 
 
+
+
+
 <td>
+
 
 
 <form action="{{ url_for('admin_delete_item', item_id=item.id) }}"
       method="POST">
 
 
-<button type="submit"
-        class="btn btn-danger btn-sm"
-        onclick="return confirm('确定删除这个物品吗？')">
+
+<button class="btn btn-danger btn-sm"
+onclick="return confirm('确定删除该物品吗？')">
+
 
 删除
 
+
 </button>
+
 
 
 </form>
 
 
+
 </td>
 
 
+
 </tr>
+
 
 
 {% endfor %}
 
 
 
+</tbody>
+
+
 </table>
+
+
+</div>
+
+
+
+
+</div>
 
 
 

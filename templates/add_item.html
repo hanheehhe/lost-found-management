@@ -1,139 +1,251 @@
 {% extends "base.html" %}
 
-{% block title %}发布失物{% endblock %}
+
+{% block title %}
+发布失物
+{% endblock %}
+
+
+
 
 {% block content %}
 
-<h2 class="mt-4">发布失物信息</h2>
+
+<div class="form-page">
 
 
-<form method="POST" enctype="multipart/form-data">
+<h2 class="mt-4">
+    发布失物信息
+</h2>
 
 
-    <div class="form-group">
-
-        <label>物品名称</label>
-
-        <input type="text"
-               class="form-control"
-               name="name"
-               placeholder="请输入物品名称"
-               required>
-
-    </div>
-
-
-    <div class="form-group">
-
-        <label>物品描述</label>
-
-        <textarea class="form-control"
-                  name="description"
-                  rows="4"
-                  placeholder="请输入物品详细描述"></textarea>
-
-    </div>
-
-
-
-    <div class="form-group">
-
-        <label>物品分类</label>
-
-        <select class="form-control"
-                name="category_id"
-                required>
-
-
-            {% for category in categories %}
-
-            <option value="{{ category.id }}">
-                {{ category.name }}
-            </option>
-
-            {% endfor %}
-
-
-        </select>
-
-    </div>
-
-
-
-    <div class="form-group">
-
-        <label>物品状态</label>
-
-
-        <select class="form-control"
-                name="status">
-
-
-            <option value="lost">
-                丢失
-            </option>
-
-
-            <option value="found">
-                拾获
-            </option>
-
-
-        </select>
-
-
-    </div>
+<p class="text-muted">
+    填写物品信息，帮助其他用户寻找失物
+</p>
 
 
 
 
-    <div class="form-group">
 
-        <label>丢失/拾获日期</label>
-
-        <input type="date"
-               class="form-control"
-               name="date"
-               required>
-
-    </div>
+<form method="POST"
+      enctype="multipart/form-data"
+      class="item-form">
 
 
 
 
-    <div class="form-group">
 
-        <label>地点</label>
-
-        <input type="text"
-               class="form-control"
-               name="location"
-               placeholder="请输入丢失或拾获地点">
-
-    </div>
+<div class="form-group">
 
 
+<label>
+物品名称
+</label>
 
 
-    <div class="form-group">
+<input type="text"
+       class="form-control"
+       name="name"
+       placeholder="请输入物品名称"
+       required>
 
-        <label>上传图片</label>
 
-        <input type="file"
-               class="form-control-file"
-               name="image">
-
-    </div>
+</div>
 
 
 
 
-    <button type="submit" class="btn btn-primary">
-        提交信息
-    </button>
+
+
+<div class="form-group">
+
+
+<label>
+物品描述
+</label>
+
+
+<textarea class="form-control"
+          name="description"
+          rows="4"
+          placeholder="描述物品特征，例如颜色、品牌、特殊标识等"></textarea>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+物品分类
+</label>
+
+
+<select class="form-control"
+        name="category_id"
+        required>
+
+
+
+{% for category in categories %}
+
+
+<option value="{{ category.id }}">
+
+{{ category.name }}
+
+</option>
+
+
+{% endfor %}
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+物品状态
+</label>
+
+
+
+<select class="form-control"
+        name="status">
+
+
+<option value="lost">
+
+丢失
+
+</option>
+
+
+<option value="found">
+
+拾获
+
+</option>
+
+
+
+</select>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+日期
+</label>
+
+
+<input type="date"
+       class="form-control"
+       name="date"
+       required>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+地点
+</label>
+
+
+<input type="text"
+       class="form-control"
+       name="location"
+       placeholder="例如：图书馆、教学楼">
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+上传图片
+</label>
+
+
+<input type="file"
+       class="form-control-file"
+       name="image">
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<button type="submit"
+        class="btn btn-primary">
+
+提交信息
+
+</button>
+
 
 
 </form>
+
+
+
+</div>
 
 
 {% endblock %}
