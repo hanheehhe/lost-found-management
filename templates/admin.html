@@ -1,84 +1,58 @@
-<!DOCTYPE html>
-<html lang="zh">
-<head>
-<meta charset="UTF-8">
-<title>管理员后台</title>
-
-<style>
-
-body{
-    font-family: Arial;
-    padding:30px;
-}
-
-.dashboard{
-    display:flex;
-    gap:20px;
-    margin-bottom:30px;
-}
+{% extends "base.html" %}
 
 
-.card{
-    width:200px;
-    padding:20px;
-    border-radius:10px;
-    background:#f2f2f2;
-    text-align:center;
-}
+{% block title %}
+管理员后台
+{% endblock %}
 
 
-.card p{
-    font-size:30px;
-    font-weight:bold;
-}
 
 
-button{
-    padding:5px 10px;
-    margin:3px;
-    cursor:pointer;
-}
-
-table{
-    border-collapse:collapse;
-    margin-bottom:30px;
-}
+{% block content %}
 
 
-td,th{
-    padding:8px;
-}
+
+<div class="mt-4">
 
 
-</style>
 
-</head>
-
-
-<body>
+<h1 class="mb-4">
+    管理员后台
+</h1>
 
 
-<h1>管理员后台</h1>
+
+<div class="row mb-4">
 
 
-<div class="dashboard">
+
+<div class="col-md-4 mb-3">
 
 
-<div class="card">
-<h3>用户数量</h3>
-<p>{{ user_count }}</p>
+<div class="card shadow-sm text-center">
+
+
+<div class="card-body">
+
+
+<h5 class="card-title">
+
+用户数量
+
+</h5>
+
+
+
+<p class="display-4">
+
+{{ user_count }}
+
+</p>
+
+
 </div>
 
 
-<div class="card">
-<h3>物品数量</h3>
-<p>{{ item_count }}</p>
-</div>
-
-
-<div class="card">
-<h3>分类数量</h3>
-<p>{{ category_count }}</p>
 </div>
 
 
@@ -86,20 +60,130 @@ td,th{
 
 
 
-<h2>用户列表</h2>
 
 
-<table border="1">
+
+
+<div class="col-md-4 mb-3">
+
+
+<div class="card shadow-sm text-center">
+
+
+<div class="card-body">
+
+
+<h5 class="card-title">
+
+物品数量
+
+</h5>
+
+
+
+<p class="display-4">
+
+{{ item_count }}
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="col-md-4 mb-3">
+
+
+<div class="card shadow-sm text-center">
+
+
+<div class="card-body">
+
+
+<h5 class="card-title">
+
+分类数量
+
+</h5>
+
+
+
+<p class="display-4">
+
+{{ category_count }}
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+<h2 class="mt-5 mb-3">
+
+用户管理
+
+</h2>
+
+
+
+<div class="table-responsive">
+
+
+<table class="table table-bordered table-hover">
+
+
+<thead class="thead-light">
 
 
 <tr>
+
 <th>ID</th>
+
 <th>邮箱</th>
+
 <th>姓名</th>
-<th>管理员</th>
+
+<th>管理员权限</th>
+
 <th>操作</th>
+
 </tr>
 
+
+</thead>
+
+
+
+
+<tbody>
 
 
 {% for user in users %}
@@ -108,94 +192,186 @@ td,th{
 <tr>
 
 
-<td>{{ user.id }}</td>
+<td>
+{{ user.id }}
+</td>
 
 
-<td>{{ user.email }}</td>
+
+<td>
+{{ user.email }}
+</td>
 
 
-<td>{{ user.first_name }}</td>
+
+<td>
+{{ user.first_name }}
+</td>
+
+
+
 
 
 <td>
 
+
 {% if user.is_admin %}
-是
+
+
+<span class="badge badge-success">
+
+管理员
+
+</span>
+
+
+
 {% else %}
-否
+
+
+
+<span class="badge badge-secondary">
+
+普通用户
+
+</span>
+
+
 {% endif %}
+
 
 
 </td>
 
 
 
+
+
+
 <td>
 
 
-<!-- 修改管理员权限 -->
+<form action="{{ url_for('toggle_admin', user_id=user.id) }}"
+      method="POST"
+      class="d-inline">
 
-<form action="{{ url_for('toggle_admin', user_id=user.id) }}" method="POST">
 
-<button type="submit">
+<button class="btn btn-warning btn-sm">
+
 
 {% if user.is_admin %}
+
 取消管理员
+
 {% else %}
+
 设为管理员
+
 {% endif %}
 
+
+
 </button>
+
 
 </form>
 
 
 
-<!-- 删除用户 -->
 
-<form action="{{ url_for('admin_delete_user', user_id=user.id) }}" method="POST">
 
-<button type="submit"
-onclick="return confirm('确定删除这个用户吗？')">
 
-删除用户
+<form action="{{ url_for('admin_delete_user', user_id=user.id) }}"
+      method="POST"
+      class="d-inline">
+
+
+<button class="btn btn-danger btn-sm"
+onclick="return confirm('确定删除该用户吗？')">
+
+
+删除
+
 
 </button>
+
+
 
 </form>
 
 
 
 </td>
+
 
 
 </tr>
+
 
 
 {% endfor %}
 
 
+
+</tbody>
+
+
 </table>
 
 
+</div>
 
 
-<h2>物品列表</h2>
 
 
 
-<table border="1">
+
+
+
+
+<h2 class="mt-5 mb-3">
+
+物品管理
+
+</h2>
+
+
+
+
+
+
+<div class="table-responsive">
+
+
+<table class="table table-bordered table-hover">
+
+
+<thead class="thead-light">
 
 
 <tr>
 
+
 <th>ID</th>
+
 <th>名称</th>
+
 <th>状态</th>
+
 <th>操作</th>
+
 
 </tr>
 
+
+
+</thead>
+
+
+
+
+
+<tbody>
 
 
 {% for item in items %}
@@ -204,31 +380,88 @@ onclick="return confirm('确定删除这个用户吗？')">
 <tr>
 
 
-<td>{{ item.id }}</td>
+<td>
+
+{{ item.id }}
+
+</td>
 
 
-<td>{{ item.name }}</td>
 
+<td>
 
-<td>{{ item.status }}</td>
+{{ item.name }}
+
+</td>
+
 
 
 
 <td>
 
 
-<form action="{{ url_for('admin_delete_item', item_id=item.id) }}" method="POST">
+{% if item.status == 'lost' %}
 
 
-<button type="submit"
-onclick="return confirm('确定删除这个物品吗？')">
+<span class="badge badge-danger">
+
+丢失
+
+</span>
+
+
+
+{% elif item.status == 'found' %}
+
+
+
+<span class="badge badge-success">
+
+拾获
+
+</span>
+
+
+
+{% else %}
+
+{{ item.status }}
+
+
+{% endif %}
+
+
+
+</td>
+
+
+
+
+
+
+
+<td>
+
+
+
+<form action="{{ url_for('admin_delete_item', item_id=item.id) }}"
+      method="POST">
+
+
+
+<button class="btn btn-danger btn-sm"
+onclick="return confirm('确定删除该物品吗？')">
+
 
 删除
+
 
 </button>
 
 
+
 </form>
+
 
 
 </td>
@@ -238,13 +471,24 @@ onclick="return confirm('确定删除这个物品吗？')">
 </tr>
 
 
+
 {% endfor %}
 
+
+
+</tbody>
 
 
 </table>
 
 
+</div>
 
-</body>
-</html>
+
+
+
+</div>
+
+
+
+{% endblock %}

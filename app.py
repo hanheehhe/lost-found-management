@@ -200,72 +200,80 @@ def logout():
 
 @app.route('/forgot_password', methods=['GET', 'POST'])
 def forgot_password():
+
     if request.method == 'POST':
+
         email = request.form.get('email')
+
         user = User.query.filter_by(email=email).first()
+
         if user:
-            otp = generate_otp()
-            expires_at = datetime.utcnow() + timedelta(minutes=10)
-            reset_token = PasswordResetToken(user_id=user.id, otp=otp, expires_at=expires_at)
-            db.session.add(reset_token)
-            db.session.commit()
-            send_otp_forget_pass(email, otp)
-            session['reset_email'] = email  # Store email in session
-            flash('An OTP has been sent to your email for password reset.', category='info')
-            return redirect(url_for('verify_reset_password'))
+
+            session['reset_user'] = user.id
+
+            flash('邮箱验证成功，请设置新密码。', category='success')
+
+            return redirect(url_for('reset_password'))
+
         else:
-            flash('Email not registered.', category='danger')
+
+            flash('该邮箱未注册。', category='danger')
+
 
     return render_template('forgot_password.html')
 
-# Route for verifying password reset
-@app.route('/verify_reset_password', methods=['GET', 'POST'])
-def verify_reset_password():
-    email = session.get('reset_email')  # Retrieve email from session
-    if not email:
-        flash('No email found in session. Please try again.', category='danger')
-        return redirect(url_for('forgot_password'))
 
-    if request.method == 'POST':
-        otp = request.form.get('otp')
-        user = User.query.filter_by(email=email).first()
-        if user:
-            reset_token = PasswordResetToken.query.filter_by(user_id=user.id, otp=otp).first()
-            if reset_token and reset_token.expires_at > datetime.utcnow():
-                session['reset_user'] = user.id
-                db.session.delete(reset_token)
-                db.session.commit()
-                flash('OTP verified. You can now reset your password.', category='success')
-                return redirect(url_for('reset_password'))
-            else:
-                flash('Invalid or expired OTP. Please try again.', category='danger')
-        else:
-            flash('Email not registered.', category='danger')
-
-    return render_template('verify_reset_password.html', email=email)
 
 # Route for resetting password
 @app.route('/reset_password', methods=['GET', 'POST'])
 def reset_password():
-    if request.method == 'POST':
-        password = request.form.get('password')
-        user_id = session.get('reset_user')
 
-        # Check if the password is None
-        if password is None or len(password) < 8 or not any(char.isdigit() for char in password) or not any(
-                char.isalpha() for char in password):
-            flash('Password must be at least 8 characters long and contain both letters and digits.', category='danger')
+    user_id = session.get('reset_user')
+
+    if not user_id:
+
+        flash('请先验证邮箱。', category='danger')
+
+        return redirect(url_for('forgot_password'))
+
+
+    if request.method == 'POST':
+
+        password = request.form.get('password')
+
+
+        if password is None or len(password) < 8 or \
+           not any(char.isdigit() for char in password) or \
+           not any(char.isalpha() for char in password):
+
+            flash(
+                '密码至少8位，并且包含字母和数字。',
+                category='danger'
+            )
+
             return redirect(url_for('reset_password'))
 
-        if user_id:
-            user = User.query.get(user_id)
-            user.password = bcrypt.generate_password_hash(password).decode('utf-8')
-            db.session.commit()
-            session.pop('reset_user', None)
-            flash('Your password has been reset successfully!', category='success')
-            return redirect(url_for('login'))
-        else:
-            flash('No user session found. Please try again.', category='danger')
+
+
+        user = User.query.get(user_id)
+
+        user.password = bcrypt.generate_password_hash(password).decode('utf-8')
+
+        db.session.commit()
+
+
+        session.pop('reset_user', None)
+
+
+        flash(
+            '密码修改成功，请重新登录。',
+            category='success'
+        )
+
+
+        return redirect(url_for('login'))
+
+
 
     return render_template('reset_password.html')
 

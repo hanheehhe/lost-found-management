@@ -1,100 +1,435 @@
 {% extends "base.html" %}
 
-{% block title %}Register{% endblock %}
+
+{% block title %}
+注册
+{% endblock %}
+
+
 
 {% block content %}
-<h2 class="mt-4">Sign Up</h2>
-<form method="POST" action="{{ url_for('register') }}" onsubmit="return validateForm()">
-    <div class="form-group">
-        <label for="email">Email address</label>
-        <input type="email" class="form-control" id="email" name="email" required>
-        <small id="emailHelp" class="form-text text-muted">Please use your college email ending in .edu</small>
-    </div>
-    <div class="form-group">
-        <label for="first_name">First Name</label>
-        <input type="text" class="form-control" id="first_name" name="first_name" required>
-    </div>
-    <div class="form-group">
-        <label for="last_name">Last Name</label>
-        <input type="text" class="form-control" id="last_name" name="last_name" required>
-    </div>
-    <div class="form-group">
-        <label for="roll_number">Roll Number</label>
-        <input type="text" class="form-control" id="roll_number" name="roll_number" required>
-    </div>
-    <div class="form-group">
-        <label for="batch">Batch</label>
-        <input type="number" class="form-control" id="batch" name="batch" min="2020" max="2030" required>
-    </div>
-   <div class="form-group">
-    <label for="course">Course</label>
 
-    <select class="form-control" id="course" name="course" required>
 
-        <option value="BTECH">Btech</option>
 
-        <option value="MTECH">Mtech</option>
+<div class="auth-page register-page mt-4">
 
-        <option value="PHD">PHD</option>
 
-    </select>
+
+<div class="card auth-card">
+
+
+
+<div class="card-body">
+
+
+
+<h2 class="text-center mb-4">
+
+用户注册
+
+</h2>
+
+
+
+
+
+<form method="POST"
+      action="{{ url_for('register') }}"
+      onsubmit="return validateForm()">
+
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+邮箱地址
+</label>
+
+
+<input type="email"
+       class="form-control"
+       id="email"
+       name="email"
+       placeholder="请输入邮箱"
+       required>
+
+
+<small class="text-muted">
+
+请使用学校邮箱
+
+</small>
+
 
 </div>
-    <div class="form-group">
 
-<label for="branch">Branch</label>
 
-<select class="form-control" id="branch" name="branch" required>
 
-<option value="CSE">CSE</option>
 
-<option value="ECE">ECE</option>
 
-<option value="EEE">EEE</option>
 
-<option value="ICE">ICE</option>
 
-<option value="CHEM">Chem</option>
+<div class="row">
 
-<option value="CIVIL">Civil</option>
 
-<option value="MECH">MECH</option>
 
-<option value="PROD">Prod</option>
+<div class="col-md-6">
 
-<option value="OTHER">Other</option>
+
+<div class="form-group">
+
+
+<label>
+名
+</label>
+
+
+<input type="text"
+class="form-control"
+name="first_name"
+required>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div class="col-md-6">
+
+
+<div class="form-group">
+
+
+<label>
+姓
+</label>
+
+
+<input type="text"
+class="form-control"
+name="last_name"
+required>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+学号
+</label>
+
+
+<input type="text"
+class="form-control"
+name="roll_number"
+required>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+入学年份
+</label>
+
+
+<input type="number"
+class="form-control"
+name="batch"
+min="2020"
+max="2030"
+required>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+学历
+</label>
+
+
+<select class="form-control"
+name="course"
+required>
+
+
+<option value="BTECH">
+本科
+</option>
+
+
+<option value="MTECH">
+硕士
+</option>
+
+
+<option value="PHD">
+博士
+</option>
+
 
 </select>
 
+
+
 </div>
-    <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" class="form-control" id="password" name="password" required>
-        <small id="passwordHelp" class="form-text text-muted">Password must be at least 8 characters long and contain both letters and numbers.</small>
-    </div>
-    <button type="submit" class="btn btn-primary">Register</button>
+
+
+
+
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+专业方向
+</label>
+
+
+<select class="form-control"
+name="branch"
+required>
+
+
+<option value="CSE">
+计算机科学与技术
+</option>
+
+
+<option value="ECE">
+电子与通信工程
+</option>
+
+
+<option value="EEE">
+电气工程
+</option>
+
+
+<option value="ICE">
+仪器与控制工程
+</option>
+
+
+<option value="CHEM">
+化学工程
+</option>
+
+
+<option value="CIVIL">
+土木工程
+</option>
+
+
+<option value="MECH">
+机械工程
+</option>
+
+
+<option value="PROD">
+生产工程
+</option>
+
+
+<option value="OTHER">
+其他
+</option>
+
+
+
+</select>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+密码
+</label>
+
+
+<input type="password"
+class="form-control"
+id="password"
+name="password"
+placeholder="请输入密码"
+required>
+
+
+<small class="text-muted">
+
+密码至少8位，并包含字母和数字
+
+</small>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<button type="submit"
+class="btn btn-primary btn-block">
+
+
+注册
+
+
+</button>
+
+
+
+
+
+
 </form>
 
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
 <script>
-    function validateForm() {
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
 
-        // Check if email ends with .edu
-        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.edu$/;
-        if (!emailPattern.test(email)) {
-            alert("Please enter a valid college email address ending in .edu");
-            return false;
-        }
 
-        // Check if password is at least 8 characters long and contains both letters and numbers
-        const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-        if (!passwordPattern.test(password)) {
-            alert("Password must be at least 8 characters long and contain both letters and numbers.");
-            return false;
-        }
+function validateForm(){
 
-        return true;
-    }
+
+const email =
+document.getElementById("email").value;
+
+
+const password =
+document.getElementById("password").value;
+
+
+
+
+const emailPattern =
+/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.edu$/;
+
+
+
+if(!emailPattern.test(email)){
+
+
+alert("请输入有效学校邮箱");
+
+
+return false;
+
+
+}
+
+
+
+
+const passwordPattern =
+/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
+
+
+if(!passwordPattern.test(password)){
+
+
+alert("密码至少8位，并包含字母和数字");
+
+
+return false;
+
+
+}
+
+
+
+return true;
+
+
+}
+
+
 </script>
+
+
+
+
+
 {% endblock %}

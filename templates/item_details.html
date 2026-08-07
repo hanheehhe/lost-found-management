@@ -1,43 +1,225 @@
-<!DOCTYPE html>
-<html lang="zh">
-<head>
-    <meta charset="UTF-8">
-    <title>物品详情</title>
-</head>
+{% extends "base.html" %}
 
-<body>
 
-<h1>物品详情</h1>
+{% block title %}
+物品详情
+{% endblock %}
 
-<h2>{{ item.name }}</h2>
 
-<p>描述：{{ item.description }}</p>
 
-<p>分类：
-{{ item.category.name }}
-</p>
+{% block content %}
 
-<p>状态：
-{{ item.status }}
-</p>
 
-<p>日期：
-{{ item.date }}
-</p>
+<div class="detail-page mt-4">
 
-<p>地点：
-{{ item.location }}
-</p>
+
+
+<h2 class="mb-4">
+    物品详情
+</h2>
+
+
+
+
+<div class="card detail-card">
+
 
 
 {% if item.image_file %}
-<img src="{{ url_for('static', filename='images/' + item.image_file) }}" width="300">
+
+
+<div class="detail-image-box">
+
+
+<img src="{{ url_for('static',
+filename='images/' + item.image_file) }}"
+class="detail-image">
+
+
+</div>
+
+
 {% endif %}
 
 
-<br><br>
 
-<a href="{{ url_for('home_page') }}">返回首页</a>
 
-</body>
-</html>
+
+
+
+<div class="card-body">
+
+
+
+
+
+<h2 class="card-title mb-3">
+
+{{ item.name }}
+
+</h2>
+
+
+
+
+
+
+<div class="detail-info">
+
+
+
+
+
+<p>
+
+<strong>
+物品描述：
+</strong>
+
+
+<br>
+
+{{ item.description }}
+
+</p>
+
+
+
+
+
+
+<p>
+
+<strong>
+物品分类：
+</strong>
+
+
+<span class="badge badge-info">
+
+{{ item.category.name }}
+
+</span>
+
+
+</p>
+
+
+
+
+
+
+
+<p>
+
+<strong>
+当前状态：
+</strong>
+
+
+
+{% if item.status == 'lost' %}
+
+
+<span class="badge badge-danger">
+
+丢失
+
+</span>
+
+
+
+{% elif item.status == 'found' %}
+
+
+<span class="badge badge-success">
+
+拾获
+
+</span>
+
+
+
+{% endif %}
+
+
+
+</p>
+
+
+
+
+
+
+
+
+<p>
+
+<strong>
+丢失/拾获日期：
+</strong>
+
+
+{{ item.date }}
+
+
+</p>
+
+
+
+
+
+
+
+<p>
+
+<strong>
+地点：
+</strong>
+
+
+{{ item.location }}
+
+
+</p>
+
+
+
+
+
+</div>
+
+
+
+
+
+<hr>
+
+
+
+
+
+<a href="{{ url_for('home_page') }}"
+class="btn btn-primary">
+
+返回首页
+
+</a>
+
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+{% endblock %}

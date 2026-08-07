@@ -1,76 +1,251 @@
-<!DOCTYPE html>
-<html lang="zh">
-<head>
-    <meta charset="UTF-8">
-    <title>发布失物</title>
-</head>
-<body>
-
-<h2>发布失物</h2>
-
-<form method="POST" enctype="multipart/form-data">
-
-    <p>
-        名称：
-        <input name="name" required>
-    </p>
-
-    <p>
-        描述：
-        <textarea name="description"></textarea>
-    </p>
+{% extends "base.html" %}
 
 
-    <p>
-        分类：
-
-        <select name="category_id" required>
-
-            {% for category in categories %}
-
-            <option value="{{ category.id }}">
-                {{ category.name }}
-            </option>
-
-            {% endfor %}
-
-        </select>
-
-    </p>
+{% block title %}
+发布失物
+{% endblock %}
 
 
-    <p>
-        状态：
-
-        <select name="status">
-            <option value="lost">丢失</option>
-            <option value="found">拾获</option>
-        </select>
-
-    </p>
 
 
-    <p>
-        日期：
-        <input type="date" name="date" required>
-    </p>
+{% block content %}
 
 
-    <p>
-        地点：
-        <input name="location">
-    </p>
+<div class="form-page">
 
 
-    <p>
-        图片：
-        <input type="file" name="image">
-    </p>
+<h2 class="mt-4">
+    发布失物信息
+</h2>
 
 
-    <button type="submit">提交</button>
+<p class="text-muted">
+    填写物品信息，帮助其他用户寻找失物
+</p>
+
+
+
+
+
+<form method="POST"
+      enctype="multipart/form-data"
+      class="item-form">
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+物品名称
+</label>
+
+
+<input type="text"
+       class="form-control"
+       name="name"
+       placeholder="请输入物品名称"
+       required>
+
+
+</div>
+
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+物品描述
+</label>
+
+
+<textarea class="form-control"
+          name="description"
+          rows="4"
+          placeholder="描述物品特征，例如颜色、品牌、特殊标识等"></textarea>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+物品分类
+</label>
+
+
+<select class="form-control"
+        name="category_id"
+        required>
+
+
+
+{% for category in categories %}
+
+
+<option value="{{ category.id }}">
+
+{{ category.name }}
+
+</option>
+
+
+{% endfor %}
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+物品状态
+</label>
+
+
+
+<select class="form-control"
+        name="status">
+
+
+<option value="lost">
+
+丢失
+
+</option>
+
+
+<option value="found">
+
+拾获
+
+</option>
+
+
+
+</select>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+日期
+</label>
+
+
+<input type="date"
+       class="form-control"
+       name="date"
+       required>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+地点
+</label>
+
+
+<input type="text"
+       class="form-control"
+       name="location"
+       placeholder="例如：图书馆、教学楼">
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+上传图片
+</label>
+
+
+<input type="file"
+       class="form-control-file"
+       name="image">
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<button type="submit"
+        class="btn btn-primary">
+
+提交信息
+
+</button>
+
+
 
 </form>
 
-</body>
-</html>
+
+
+</div>
+
+
+{% endblock %}

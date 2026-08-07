@@ -1,25 +1,183 @@
 {% extends "base.html" %}
 
-{% block title %}Login{% endblock %}
+
+{% block title %}
+登录
+{% endblock %}
+
+
 
 {% block content %}
-<h2 class="mt-4">Login</h2>
-<form method="POST" action="{{ url_for('login') }}">
-    <div class="form-group">
-        <label for="email">Email address</label>
-        <input type="email" class="form-control" id="email" name="email" required>
-    </div>
-    <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" class="form-control" id="password" name="password" required>
-    </div>
-    <div class="form-group form-check">
-        <input type="checkbox" class="form-check-input" id="remember_me" name="remember_me">
-        <label class="form-check-label" for="remember_me">Remember Me</label>
-    </div>
-    <button type="submit" class="btn btn-primary">Login</button>
+
+
+
+<div class="auth-page mt-5">
+
+
+
+<div class="card auth-card">
+
+
+
+<div class="card-body">
+
+
+
+<h2 class="text-center mb-4">
+
+用户登录
+
+</h2>
+
+
+
+
+
+<form method="POST"
+      action="{{ url_for('login') }}">
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+
+邮箱地址
+
+</label>
+
+
+<input type="email"
+
+       class="form-control"
+
+       name="email"
+
+       placeholder="请输入邮箱"
+
+       required>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+
+密码
+
+</label>
+
+
+<input type="password"
+
+       class="form-control"
+
+       name="password"
+
+       placeholder="请输入密码"
+
+       required>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="form-group form-check">
+
+
+<input type="checkbox"
+
+       class="form-check-input"
+
+       id="remember_me"
+
+       name="remember_me">
+
+
+<label class="form-check-label"
+       for="remember_me">
+
+
+记住我
+
+
+</label>
+
+
+</div>
+
+
+
+
+
+
+
+<button type="submit"
+
+        class="btn btn-primary btn-block">
+
+
+登录
+
+
+</button>
+
+
+
+
+
 </form>
-<p class="mt-2">
-    <a href="{{ url_for('forgot_password') }}">Forgot your password?</a>
-</p>
+
+
+
+
+
+
+
+
+<div class="text-center mt-3">
+
+
+<a href="{{ url_for('forgot_password') }}">
+
+忘记密码？
+
+</a>
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
 {% endblock %}
