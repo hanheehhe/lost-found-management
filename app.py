@@ -3,28 +3,47 @@ from flask_bcrypt import Bcrypt
 from flask_login import login_user, logout_user, login_required, current_user, LoginManager
 import random
 import os
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone, timedelta, date
 from werkzeug.utils import secure_filename
 from itsdangerous import URLSafeTimedSerializer as Serializer, SignatureExpired
 from flask_mail import Mail, Message
+from dotenv import load_dotenv
 from models import db, User, PasswordResetToken, Item, Category, Notification, ItemStatusEnum
+import ai_service
+
+# 加载 .env 环境变量（含 API Key 等密钥，不提交仓库）
+load_dotenv()
+
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = 'd6b5f6a4d1c1e3c9b7d9d2f1e8b9c0a4e5d6f7a8b9c0d1e2f3a4b5c6d7e8f9g0h'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:123456@localhost/lost-found_db?charset=utf8mb4'
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-only-secret-key-change-me')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI', 'sqlite:///lostfound.db')
 app.config['UPLOAD_FOLDER'] = os.path.join('static', 'images')
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USERNAME'] = '_____@gmail.com'
-app.config['MAIL_PASSWORD'] = 'passeward'
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER', 'smtp.gmail.com')
+app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT', '587'))
+app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME', '')
+app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD', '')
+app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS', 'True') == 'True'
+app.config['MAIL_USE_SSL'] = os.getenv('MAIL_USE_SSL', 'False') == 'True'
 
 db.init_app(app)
 mail = Mail(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
+
+
+def _parse_date(value):
+    """把 'YYYY-MM-DD' 字符串转成 date 对象；已是 date 对象或非法则原样返回/None。"""
+    if value is None or value == '':
+        return None
+    if isinstance(value, date):
+        return value
+    try:
+        return datetime.strptime(value, '%Y-%m-%d').date()
+    except (ValueError, TypeError):
+        return None
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -391,6 +410,66 @@ def home_page():
     return render_template('home.html', items=items, categories=categories)
 
 
+@app.route('/ai_search', methods=['GET', 'POST'])
+@login_required
+def ai_search():
+    """AI 智能匹配：通过文字描述或图片查找相似物品。"""
+    categories = Category.query.all()
+    matches = []
+    searched = False
+
+    if request.method == 'POST':
+        searched = True
+        query_text = request.form.get('query_text', '').strip()
+        query_image = request.files.get('query_image')
+        query_status = request.form.get('query_status', '')  # 查找方向
+
+        # 上传的查询图片临时保存
+        query_image_path = None
+        if query_image and query_image.filename:
+            filename = secure_filename(query_image.filename)
+            query_image_path = os.path.join(app.config['UPLOAD_FOLDER'], 'query_' + filename)
+            query_image.save(query_image_path)
+
+        # 生成查询向量（融合文字 + 图片）
+        query_vector = ai_service.generate_embedding(
+            text=query_text or None,
+            image_path=query_image_path,
+        )
+
+        # 没有向量时（未配置 Key），退化为关键词搜索
+        if query_vector is None:
+            if query_text:
+                fallback = Item.query.filter(
+                    (Item.name.ilike(f'%{query_text}%')) |
+                    (Item.description.ilike(f'%{query_text}%'))
+                )
+                if query_status:
+                    fallback = fallback.filter(Item.status == query_status)
+                matches = [(item, 0.0) for item in fallback.all()]
+            flash('AI 未启用，已退化为关键词搜索', 'info')
+        else:
+            # 候选集：与查找方向相反状态的物品（找失物 -> 匹配拾获）
+            candidates_query = Item.query
+            if query_status:
+                candidates_query = candidates_query.filter(Item.status == query_status)
+            candidates = []
+            for item in candidates_query.all():
+                candidates.append((item, item.get_embedding()))
+            matches = ai_service.match_items(query_vector, candidates, top_k=10)
+
+        # 清理临时查询图片
+        if query_image_path and os.path.exists(query_image_path):
+            os.remove(query_image_path)
+
+    return render_template(
+        'ai_search.html',
+        categories=categories,
+        matches=matches,
+        searched=searched,
+    )
+
+
 @app.route('/add_item', methods=['GET', 'POST'])
 @login_required
 def add_item():
@@ -403,22 +482,37 @@ def add_item():
         description = request.form.get('description')
         category_id = request.form.get('category_id')
         status = request.form.get('status')
-        date = request.form.get('date')
+        date = _parse_date(request.form.get('date'))
         location = request.form.get('location')
         image = request.files.get('image')
 
 
         image_filename = 'default.jpg'
+        image_path = None
 
         if image and image.filename:
             image_filename = secure_filename(image.filename)
-            image.save(
-                os.path.join(
-                    app.config['UPLOAD_FOLDER'],
-                    image_filename
-                )
-            )
+            image_path = os.path.join(app.config['UPLOAD_FOLDER'], image_filename)
+            image.save(image_path)
 
+
+        # ===== AI 分析：视觉理解 + 多模态 embedding =====
+        ai_tags = None
+        ai_vector = None
+
+        # 判断是否存在有效的图片文件
+        valid_image = image_path if (image_path and os.path.exists(image_path)) else None
+
+        if valid_image:
+            # 模型一：视觉理解，提取结构化标签
+            ai_tags = ai_service.analyze_image(valid_image)
+
+        # 模型二：多模态 embedding（融合文字 + 图片）
+        text_blob = ai_service._build_text_blob(name, description, ai_tags)
+        ai_vector = ai_service.generate_embedding(
+            text=text_blob,
+            image_path=valid_image,
+        )
 
         new_item = Item(
             name=name,
@@ -431,12 +525,21 @@ def add_item():
             location=location
         )
 
+        # 写入 AI 结果（无 Key 时这些字段保持 None）
+        if ai_tags:
+            new_item.ai_category = ai_tags.get("category")
+            new_item.ai_color = ai_tags.get("color")
+            new_item.ai_material = ai_tags.get("material")
+            new_item.ai_brand = ai_tags.get("brand")
+            new_item.ai_features = ai_tags.get("features")
+        new_item.set_embedding(ai_vector)
+
 
         db.session.add(new_item)
         db.session.commit()
 
 
-        flash('发布成功', 'success')
+        flash('发布成功' + ('，AI 已自动识别特征' if ai_tags else ''), 'success')
         return redirect(url_for('home_page'))
 
 
@@ -460,7 +563,7 @@ def edit_item(item_id):
         item.description = request.form.get('description', item.description)
         item.category_id = request.form.get('category', item.category_id)
         item.status = request.form.get('status', item.status)
-        item.date = request.form.get('date', item.date)
+        item.date = _parse_date(request.form.get('date')) or item.date
         item.location = request.form.get('location', item.location)
         image_file = request.files.get('image') or request.files.get('image_file')
 

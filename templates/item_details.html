@@ -193,6 +193,75 @@ class="detail-image">
 
 
 
+{% if item.ai_category or item.ai_color or item.ai_material or item.ai_brand or item.ai_features %}
+
+
+<div class="ai-tags mt-4 mb-2">
+
+
+<h5>
+🤖 AI 识别特征
+</h5>
+
+
+{% if item.ai_category %}
+<p>
+<strong>
+AI 类别：
+</strong>
+<span class="badge badge-info">
+{{ item.ai_category }}
+</span>
+</p>
+{% endif %}
+
+
+{% if item.ai_color %}
+<p>
+<strong>
+颜色：
+</strong>
+{{ item.ai_color }}
+</p>
+{% endif %}
+
+
+{% if item.ai_material %}
+<p>
+<strong>
+材质：
+</strong>
+{{ item.ai_material }}
+</p>
+{% endif %}
+
+
+{% if item.ai_brand %}
+<p>
+<strong>
+品牌：
+</strong>
+{{ item.ai_brand }}
+</p>
+{% endif %}
+
+
+{% if item.ai_features %}
+<p>
+<strong>
+显著特征：
+</strong>
+{{ item.ai_features }}
+</p>
+{% endif %}
+
+
+</div>
+
+
+{% endif %}
+
+
 <hr>
 
 
