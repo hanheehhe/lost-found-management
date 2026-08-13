@@ -6,6 +6,7 @@ from itsdangerous import URLSafeTimedSerializer as Serializer, SignatureExpired
 from flask import current_app
 from flask_login import UserMixin
 import enum
+import json
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
@@ -91,6 +92,36 @@ class Item(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     claimed = db.Column(db.Boolean, default=False)
     location = db.Column(db.String(255))  # Add this line to include the location field
+
+    # ===== AI 智能匹配字段 =====
+    ai_category = db.Column(db.String(50))   # AI 识别类别
+    ai_color = db.Column(db.String(50))      # AI 识别颜色
+    ai_material = db.Column(db.String(50))   # AI 识别材质
+    ai_brand = db.Column(db.String(50))      # AI 识别品牌
+    ai_features = db.Column(db.Text)         # AI 提取显著特征
+    embedding = db.Column(db.Text)           # 多模态匹配向量（JSON 序列化）
+
+    def set_embedding(self, vector):
+        """把向量序列化为 JSON 存入数据库。"""
+        self.embedding = json.dumps(vector) if vector else None
+
+    def get_embedding(self):
+        """从数据库读取向量并反序列化。"""
+        if not self.embedding:
+            return None
+        try:
+            return json.loads(self.embedding)
+        except (json.JSONDecodeError, TypeError):
+            return None
+
+    def ai_tags_dict(self):
+        """返回 AI 标签字典（用于模板展示）。"""
+        return {
+            "类别": self.ai_category,
+            "颜色": self.ai_color,
+            "材质": self.ai_material,
+            "品牌": self.ai_brand,
+        }
 
     def __repr__(self):
         return f"Item('{self.name}', '{self.status}', '{self.date}')"
