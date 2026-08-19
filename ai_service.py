@@ -20,6 +20,7 @@ AI 智能匹配服务
 import os
 import json
 import math
+from pathlib import Path
 
 # 加载 .env 环境变量（若尚未被 app.py 加载）
 try:
@@ -55,6 +56,11 @@ def _set_api_key():
         dashscope.api_key = os.getenv("DASHSCOPE_API_KEY", "")
 
 
+def _file_uri(path):
+    """把本地图片路径转成绝对 file:// URI，供 DashScope 多模态接口读取。"""
+    return Path(path).resolve().as_uri()
+
+
 # ---------------------------------------------------------------------------
 # 模型一：视觉理解
 # ---------------------------------------------------------------------------
@@ -87,7 +93,7 @@ def analyze_image(image_path):
             messages=[{
                 "role": "user",
                 "content": [
-                    {"image": "file://" + image_path},
+                    {"image": _file_uri(image_path)},
                     {"text": prompt},
                 ],
             }],
@@ -161,7 +167,7 @@ def generate_embedding(text=None, image_path=None):
 
     inputs = []
     if image_path and os.path.exists(image_path):
-        inputs.append({"image": "file://" + image_path})
+        inputs.append({"image": _file_uri(image_path)})
     if text:
         inputs.append({"text": text})
 

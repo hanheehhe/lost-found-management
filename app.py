@@ -561,16 +561,44 @@ def edit_item(item_id):
     if request.method == 'POST':
         item.name = request.form.get('name', item.name)
         item.description = request.form.get('description', item.description)
-        item.category_id = request.form.get('category', item.category_id)
+        item.category_id = request.form.get('category_id', item.category_id)
         item.status = request.form.get('status', item.status)
         item.date = _parse_date(request.form.get('date')) or item.date
         item.location = request.form.get('location', item.location)
         image_file = request.files.get('image') or request.files.get('image_file')
 
+        image_path = None
         if image_file and image_file.filename:
             image_filename = secure_filename(image_file.filename)
-            image_file.save(os.path.join(app.config['UPLOAD_FOLDER'], image_filename))
+            image_path = os.path.join(app.config['UPLOAD_FOLDER'], image_filename)
+            image_file.save(image_path)
             item.image_file = image_filename
+
+        # ===== AI 分析：视觉理解 + 多模态 embedding（编辑后重新生成）=====
+        # 优先使用新上传的图片，否则回退到已有图片
+        valid_image = image_path if (image_path and os.path.exists(image_path)) else None
+        if not valid_image and item.image_file and item.image_file != 'default.jpg':
+            existing_path = os.path.join(app.config['UPLOAD_FOLDER'], item.image_file)
+            if os.path.exists(existing_path):
+                valid_image = existing_path
+
+        ai_tags = None
+        if valid_image:
+            ai_tags = ai_service.analyze_image(valid_image)
+
+        text_blob = ai_service._build_text_blob(item.name, item.description, ai_tags)
+        ai_vector = ai_service.generate_embedding(
+            text=text_blob,
+            image_path=valid_image,
+        )
+
+        if ai_tags:
+            item.ai_category = ai_tags.get("category")
+            item.ai_color = ai_tags.get("color")
+            item.ai_material = ai_tags.get("material")
+            item.ai_brand = ai_tags.get("brand")
+            item.ai_features = ai_tags.get("features")
+        item.set_embedding(ai_vector)
 
         db.session.commit()
         flash('Item updated successfully.', 'success')
